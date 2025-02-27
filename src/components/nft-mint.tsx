@@ -67,6 +67,7 @@ export function NftMint(props: Props) {
 		console.error("Invalid pricePerToken");
 		return null;
 	}
+
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
 			<div className="absolute top-4 right-4">
