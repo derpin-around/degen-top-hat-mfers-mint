@@ -99,122 +99,132 @@ export function NftMint(props: Props) {
 					</h2>
 					<p className="text-gray-600 dark:text-gray-300 mb-4 text-center">
 						{props.description}<br></br>
-						{props.unclaimedSupply !== undefined ? `(${props.unclaimedSupply.toLocaleString()} mints remaining)` : ""}
+						{props.unclaimedSupply !== undefined ? 
+							(props.unclaimedSupply === 0n ? 
+								"sorry mfer, minted out" : 
+								`(${props.unclaimedSupply.toLocaleString()} mints remaining)`
+							) : ""}
 					</p>
-					<p className="text-gray-600 dark:text-gray-300 mb-4 text-center">
-					<strong>how many mfers do you want?</strong>
-					</p>
-					<div className="flex items-center mb-4">
-						<div className="flex items-center justify-center w-full">
-							<Button
-								variant="outline"
-								size="icon"
-								onClick={decreaseQuantity}
-								disabled={quantity <= 1}
-								aria-label="Decrease quantity"
-								className="rounded-r-none"
-							>
-								<Minus className="h-4 w-4" />
-							</Button>
-							<Input
-								type="number"
-								value={quantity}
-								onChange={handleQuantityChange}
-								className="w-28 text-center rounded-none border-x-0 pl-6"
-								min="1"
-							/>
-							<Button
-								variant="outline"
-								size="icon"
-								onClick={increaseQuantity}
-								aria-label="Increase quantity"
-								className="rounded-l-none"
-							>
-								<Plus className="h-4 w-4" />
-							</Button>
-						</div>
-					</div>
-					<div className="flex items-center justify-center mb-4 text-center w-full">
-						<div className="text-base font-semibold dark:text-white">
-							<span style={{fontFamily: "monospace"}}>{props.pricePerToken * quantity} degen</span>
-						</div>
-					</div>
+					{props.unclaimedSupply !== 0n && (
+						<>
+							<p className="text-gray-600 dark:text-gray-300 mb-4 text-center">
+								<strong>how many mfers do you want?</strong>
+							</p>
+							<div className="flex items-center mb-4">
+								<div className="flex items-center justify-center w-full">
+									<Button
+										variant="outline"
+										size="icon"
+										onClick={decreaseQuantity}
+										disabled={quantity <= 1}
+										aria-label="Decrease quantity"
+										className="rounded-r-none"
+									>
+										<Minus className="h-4 w-4" />
+									</Button>
+									<Input
+										type="number"
+										value={quantity}
+										onChange={handleQuantityChange}
+										className="w-28 text-center rounded-none border-x-0 pl-6"
+										min="1"
+									/>
+									<Button
+										variant="outline"
+										size="icon"
+										onClick={increaseQuantity}
+										aria-label="Increase quantity"
+										className="rounded-l-none"
+									>
+										<Plus className="h-4 w-4" />
+									</Button>
+								</div>
+							</div>
+							<div className="flex items-center justify-center mb-4 text-center w-full">
+								<div className="text-base font-semibold dark:text-white">
+									<span style={{fontFamily: "monospace"}}>{props.pricePerToken * quantity} degen</span>
+								</div>
+							</div>
 
-					<div className="flex items-center justify-center space-x-2 mb-4 w-full">
-						<Switch
-							id="custom-address"
-							checked={useCustomAddress}
-							onCheckedChange={setUseCustomAddress}
-						/>
-						<Label
-							htmlFor="custom-address"
-							className={`${useCustomAddress ? "" : "text-gray-500"} cursor-pointer`}
-						>
-							mint to a custom address
-						</Label>
-					</div>
-					{useCustomAddress && (
-						<div className="flex justify-center mb-4 w-full">
-							<Input
-								id="address-input"
-								type="text"
-								placeholder="Enter recipient address"
-								value={customAddress}
-								onChange={(e) => setCustomAddress(e.target.value)}
-								className="w-full max-w-md"
-							/>
-						</div>
+							<div className="flex items-center justify-center space-x-2 mb-4 w-full">
+								<Switch
+									id="custom-address"
+									checked={useCustomAddress}
+									onCheckedChange={setUseCustomAddress}
+								/>
+								<Label
+									htmlFor="custom-address"
+									className={`${useCustomAddress ? "" : "text-gray-500"} cursor-pointer`}
+								>
+									mint to a custom address
+								</Label>
+							</div>
+							{useCustomAddress && (
+								<div className="flex justify-center mb-4 w-full">
+									<Input
+										id="address-input"
+										type="text"
+										placeholder="Enter recipient address"
+										value={customAddress}
+										onChange={(e) => setCustomAddress(e.target.value)}
+										className="w-full max-w-md"
+									/>
+								</div>
+							)}
+						</>
 					)}
 				</CardContent>
 				<CardFooter>
-					{account ? (
-						<ClaimButton
-							theme={"light"}
-							contractAddress={props.contract.address}
-							chain={props.contract.chain}
-							client={props.contract.client}
-							claimParams={
-								props.isERC1155
-									? {
-											type: "ERC1155",
-											tokenId: props.tokenId,
-											quantity: BigInt(quantity),
-											to: customAddress,
-											from: account.address,
-										}
-									: props.isERC721
+					{props.unclaimedSupply !== 0n && (
+						account ? (
+							<ClaimButton
+								theme={"light"}
+								contractAddress={props.contract.address}
+								chain={props.contract.chain}
+								client={props.contract.client}
+								claimParams={
+									props.isERC1155
 										? {
-												type: "ERC721",
+												type: "ERC1155",
+												tokenId: props.tokenId,
 												quantity: BigInt(quantity),
 												to: customAddress,
 												from: account.address,
 											}
-										: {
-												type: "ERC20",
-												quantity: String(quantity),
-												to: customAddress,
-												from: account.address,
-											}
-							}
-							style={{
-								backgroundColor: "black",
-								color: "white",
-								width: "100%",
-							}}
-							disabled={isMinting}
-							onTransactionSent={() => toast.info("thank you mfer - minting now...")}
-							onTransactionConfirmed={() =>
-								toast.success("minted!")
-							}
-							onError={(err) => toast.error(err.message)}
-						>
-							mint {quantity} mfer{quantity > 1 ? "s" : ""}
-						</ClaimButton>
-					) : (
-						<ConnectButton
-							client={client}
-							connectButton={{ style: { width: "100%" } }}
-						/>
+										: props.isERC721
+											? {
+													type: "ERC721",
+													quantity: BigInt(quantity),
+													to: customAddress,
+													from: account.address,
+												}
+											: {
+													type: "ERC20",
+													quantity: String(quantity),
+													to: customAddress,
+													from: account.address,
+												}
+								}
+								style={{
+									backgroundColor: "black",
+									color: "white",
+									width: "100%",
+								}}
+								disabled={isMinting}
+								onTransactionSent={() => toast.info("thank you mfer - minting now...")}
+								onTransactionConfirmed={() =>
+									toast.success("minted!")
+								}
+								onError={(err) => toast.error(err.message)}
+							>
+								mint {quantity} mfer{quantity > 1 ? "s" : ""}
+							</ClaimButton>
+						) : (
+							<ConnectButton
+								client={client}
+								connectButton={{ style: { width: "100%" } }}
+							/>
+						)
 					)}
 				</CardFooter>
 			</Card>
