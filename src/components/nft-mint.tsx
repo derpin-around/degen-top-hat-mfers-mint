@@ -136,7 +136,7 @@ export function NftMint(props: Props) {
 					</div>
 					<div className="flex items-center justify-center mb-4 text-center w-full">
 						<div className="text-base font-semibold dark:text-white">
-							<span style={{fontFamily: "monospace"}}>{props.pricePerToken * quantity} {props.currencySymbol}</span>
+							<span style={{fontFamily: "monospace"}}>{props.pricePerToken * quantity} degen</span>
 						</div>
 					</div>
 
