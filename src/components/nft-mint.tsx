@@ -37,7 +37,6 @@ type Props = {
 };
 
 export function NftMint(props: Props) {
-	// console.log(props);
 	const [isMinting, setIsMinting] = useState(false);
 	const [quantity, setQuantity] = useState(1);
 	const [useCustomAddress, setUseCustomAddress] = useState(false);
@@ -60,9 +59,6 @@ export function NftMint(props: Props) {
 		}
 	};
 
-	// const toggleTheme = () => {
-	// 	setTheme(theme === "dark" ? "light" : "dark");
-	// };
 	if (props.pricePerToken === null || props.pricePerToken === undefined) {
 		console.error("Invalid pricePerToken");
 		return null;
@@ -89,9 +85,7 @@ export function NftMint(props: Props) {
 								client={client}
 								className="w-full h-full object-cover pt-12"
 								alt=""
-								src={
-									props.contractImage || "/placeholder.svg?height=400&width=400"
-								}
+								src={props.contractImage || "/placeholder.svg?height=400&width=400"}
 							/>
 						)}
 					</div>
@@ -148,30 +142,32 @@ export function NftMint(props: Props) {
 								</div>
 							</div>
 
-					<div className="flex items-center justify-center space-x-2 mb-4 w-full">
-						<Switch
-							id="custom-address"
-							checked={useCustomAddress}
-							onCheckedChange={setUseCustomAddress}
-						/>
-						<Label
-							htmlFor="custom-address"
-							className={`${useCustomAddress ? "" : "text-gray-500"} cursor-pointer`}
-						>
-							mint to a custom address
-						</Label>
-					</div>
-					{useCustomAddress && (
-						<div className="flex justify-center mb-4 w-full">
-							<Input
-								id="address-input"
-								type="text"
-								placeholder="Enter recipient address"
-								value={customAddress}
-								onChange={(e) => setCustomAddress(e.target.value)}
-								className="w-full max-w-md"
-							/>
-						</div>
+							<div className="flex items-center justify-center space-x-2 mb-4 w-full">
+								<Switch
+									id="custom-address"
+									checked={useCustomAddress}
+									onCheckedChange={setUseCustomAddress}
+								/>
+								<Label
+									htmlFor="custom-address"
+									className={`${useCustomAddress ? "" : "text-gray-500"} cursor-pointer`}
+								>
+									mint to a custom address
+								</Label>
+							</div>
+							{useCustomAddress && (
+								<div className="flex justify-center mb-4 w-full">
+									<Input
+										id="address-input"
+										type="text"
+										placeholder="Enter recipient address"
+										value={customAddress}
+										onChange={(e) => setCustomAddress(e.target.value)}
+										className="w-full max-w-md"
+									/>
+								</div>
+							)}
+						</>
 					)}
 				</CardContent>
 				<CardFooter>
@@ -212,9 +208,7 @@ export function NftMint(props: Props) {
 								}}
 								disabled={isMinting}
 								onTransactionSent={() => toast.info("thank you mfer - minting now...")}
-								onTransactionConfirmed={() =>
-									toast.success("minted!")
-								}
+								onTransactionConfirmed={() => toast.success("minted!")}
 								onError={(err) => toast.error(err.message)}
 							>
 								mint {quantity} mfer{quantity > 1 ? "s" : ""}
