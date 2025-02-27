@@ -50,13 +50,13 @@ export function NftMint(props: Props) {
 	};
 
 	const increaseQuantity = () => {
-		setQuantity((prev) => prev + 1); // Assuming a max of 10 NFTs can be minted at once
+		setQuantity((prev) => Math.min(5, prev + 1));
 	};
 
 	const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = Number.parseInt(e.target.value);
 		if (!Number.isNaN(value)) {
-			setQuantity(Math.min(Math.max(1, value)));
+			setQuantity(Math.min(5, Math.max(1, value)));
 		}
 	};
 
@@ -128,6 +128,7 @@ export function NftMint(props: Props) {
 										onChange={handleQuantityChange}
 										className="w-28 text-center rounded-none border-x-0 pl-6"
 										min="1"
+										max="5"
 									/>
 									<Button
 										variant="outline"
@@ -146,32 +147,30 @@ export function NftMint(props: Props) {
 								</div>
 							</div>
 
-							<div className="flex items-center justify-center space-x-2 mb-4 w-full">
-								<Switch
-									id="custom-address"
-									checked={useCustomAddress}
-									onCheckedChange={setUseCustomAddress}
-								/>
-								<Label
-									htmlFor="custom-address"
-									className={`${useCustomAddress ? "" : "text-gray-500"} cursor-pointer`}
-								>
-									mint to a custom address
-								</Label>
-							</div>
-							{useCustomAddress && (
-								<div className="flex justify-center mb-4 w-full">
-									<Input
-										id="address-input"
-										type="text"
-										placeholder="Enter recipient address"
-										value={customAddress}
-										onChange={(e) => setCustomAddress(e.target.value)}
-										className="w-full max-w-md"
-									/>
-								</div>
-							)}
-						</>
+					<div className="flex items-center justify-center space-x-2 mb-4 w-full">
+						<Switch
+							id="custom-address"
+							checked={useCustomAddress}
+							onCheckedChange={setUseCustomAddress}
+						/>
+						<Label
+							htmlFor="custom-address"
+							className={`${useCustomAddress ? "" : "text-gray-500"} cursor-pointer`}
+						>
+							mint to a custom address
+						</Label>
+					</div>
+					{useCustomAddress && (
+						<div className="flex justify-center mb-4 w-full">
+							<Input
+								id="address-input"
+								type="text"
+								placeholder="Enter recipient address"
+								value={customAddress}
+								onChange={(e) => setCustomAddress(e.target.value)}
+								className="w-full max-w-md"
+							/>
+						</div>
 					)}
 				</CardContent>
 				<CardFooter>
