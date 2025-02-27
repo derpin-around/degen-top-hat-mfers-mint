@@ -139,11 +139,6 @@ export function NftMint(props: Props) {
 							<span style={{fontFamily: "monospace"}}>{props.pricePerToken * quantity} {props.currencySymbol}</span>
 						</div>
 					</div>
-					<div className="flex items-center justify-center mb-4 text-center w-full">
-						<div className="text-base dark:text-white">
-							(<span style={{fontFamily: "monospace", fontWeight: "bold"}}>{.00042 * quantity} {props.currencySymbol}</span> for mfers, tinyass unicorns, and based space punks holders. feb. 17th snapshot)
-						</div>
-					</div>
 
 					<div className="flex items-center justify-center space-x-2 mb-4 w-full">
 						<Switch
